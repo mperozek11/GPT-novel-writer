@@ -6,7 +6,15 @@ import logging
 
 class ShortStoryWriter:
     
-    FORMAT_PROMT = """The outline should be formatted as lists of plot points separated into chapters. Plot points should be extremely detailed, and should provide a thorough framework for the plot. The output should be formatted as a list of chapters with lists of extremely detailed plot points in each chapter. The outline should invent events to fill out the narative."""
+    FORMAT_PROMT = """The outline should be formatted as lists of plot points separated into chapters. 
+    Plot points should be extremely detailed, and should provide a thorough framework for the plot. 
+    The output should be formatted as a list of chapters with bulleted lists of extremely detailed plot points in each chapter. 
+    The outline should invent events to fill out the narative.""".strip()
+
+    # the tagging is not quite working as expected. This will likely need to be separated out into another api call to go in and edit the finalized outline
+    EXPLICIT_PROMPT = """Please make sure add a [CONTENT] tag around any outline bullet points with sexual encounters. And tastefully summarize the plot point"""
+    TAG_IGNORE_PROMPT = """Please do not complete the writing for any of the explicit scenes marked with a [CONTENT] tag. Make sure to leave the [CONTENT] bulllet point in the text output for plot coherence."""
+    # === FUTURE PROMPTING ===
 
     def __init__(self, model='gpt-3.5-turbo', lc_model='gpt-3.5-turbo-16k'):
         """
@@ -19,16 +27,17 @@ class ShortStoryWriter:
         openai.organization = 'org-SVcbPvQFyGx47d4LxAQpHQGP'
         openai.api_key = os.getenv('OPENAI_API_KEY')
 
-    def author(self, prompt, chapters=None):
+    def author(self, prompt, chapters=None, explicit_tag=True):
+        self.explicit_tag = explicit_tag
+
         summary = self.plot_summary(prompt, 3)
-
         character_outline = self.character_outline(summary)
-
+        logging.info(character_outline)
         outline = self.outline(summary, character_outline)
-
+        logging.info(outline)
         # skipping robust outline for now
-
         story = self.write_novella(outline, character_outline)
+
         return story
 
 
@@ -98,8 +107,8 @@ class ShortStoryWriter:
 
     def outline(self, outline, character_context):
         full_prompt = f"{outline} {self.FORMAT_PROMT}. Keep in mind the following details about the main characters: {character_context}"
-        # print(full_prompt)
-
+        if self.explicit_tag:
+            full_prompt += self.EXPLICIT_PROMPT
 
         response = openai.ChatCompletion.create(
             model=self.lc_model,
@@ -140,6 +149,8 @@ class ShortStoryWriter:
     def write_chapter(self, outline, character_outline, chapter_num):
         # probably want to switch to longer context model here
         prompt = f'Write the entirety of chapter {chapter_num} in great detail as if this were the final copy of the novella. Try to add details like foreshadowing and use rich, descriptive language.'
+        if self.explicit_tag:
+            prompt += self.TAG_IGNORE_PROMPT
 
         messages=[
                 {'role': 'system', 'content': 'You are a helpful erotic novel writing assistant.'},
