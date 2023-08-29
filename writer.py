@@ -3,7 +3,6 @@ import logging
 import os
 import argparse
 
-# logging.basicConfig(level=logging.INFO)
 
 def setup_logging(log_level):
     logging.basicConfig(level=log_level)
@@ -37,13 +36,7 @@ def main():
     writer = ShortStoryWriter(org_key=args.org_key, api_key=args.api_key)
     story = writer.author(args.prompt, args.output_dir)
     print(story)
-
     return
-
-    # old vv
-    org_key = 'org-SVcbPvQFyGx47d4LxAQpHQGP'
-    test_prompt = "a story about a dog who fights jesus"
-
 
 if __name__ == '__main__':
     main()
