@@ -1,9 +1,10 @@
 import openai
-import prompt_text
-import openai_model_info
+import prompting.prompt_text as prompt_text
+import prompting.openai_model_info as openai_model_info
 import tiktoken
 import logging
 from langchain.prompts import PromptTemplate
+import time
 
 class ShortStoryWriter:
 
@@ -23,10 +24,12 @@ class ShortStoryWriter:
         """
         Returns an entire short novel based on a short input prompt
         """
+        start = time.time()
         self.n_chapters = n_chapters
         # TODO refactor with LLMChain 
 
         summary = self.plot_summary(prompt)
+        logging.info(summary)
         character_outline = self.character_outline(summary)
         logging.info(character_outline)
         outline = self.outline(summary, character_outline)
@@ -35,6 +38,9 @@ class ShortStoryWriter:
         story = self.write_novella(outline, character_outline)
 
         print(self.compute_costs())
+        elapsed = time.time() - start
+        compute_time = time.strftime('%H:%M:%S', time.gmtime(elapsed))
+        print(f"wall time to compute: {compute_time}")
         return story
 
     def plot_summary(self, concept, iterations=3):
@@ -45,6 +51,7 @@ class ShortStoryWriter:
         iterations: number of generated plot summaries. All outputs will be pruned and the best one will be selected 
         """
         prompt = prompt_text.SUMMARY.format(concept=concept, n_chapters=self.n_chapters)
+        logging.debug(prompt)
         response = self.get_response(self.model, prompt, max_tokens=1200, n=iterations)
         if iterations == 1:
             return response['choices'][0]['message']['content']

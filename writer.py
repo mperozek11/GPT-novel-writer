@@ -1,18 +1,46 @@
 from prompting.storywriter_short import ShortStoryWriter
 import logging
 import os
+import argparse
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
+def setup_logging(log_level):
+    logging.basicConfig(level=log_level)
+    logging.info("Logging initialized at %s level", logging.getLevelName(log_level))
+    
 def main():
-    test_prompt = """A short love story titled 'Ink and Indulgence' where a talented tattoo artist named Zach forms an intimate connection with a client named Claire. Claire is a powerful buisness woman who insists on keeping all of her tattoos tastefully out of sight for profesionalism. During the first tattoo session, Claire and Zach start to flirt and the sexual tension is palpable. During the second session, the two have an erotic encounter involving the tattoo gun."""
-    writer = ShortStoryWriter(org_key='org-SVcbPvQFyGx47d4LxAQpHQGP', api_key=os.getenv('OPENAI_API_KEY'))
 
-    story = writer.author(test_prompt)
+    parser = argparse.ArgumentParser(description='Generate short stories based on a prompt.')
+    
+    # Add command line arguments
+    parser.add_argument('--prompt', default='a story about a dog who fights jesus', 
+                        help='The prompt to base the story on.')
+    parser.add_argument('--api_key', default=os.getenv('OPENAI_API_KEY'), 
+                        help='Your OpenAI API Key.')
+    parser.add_argument('--org_key', default=os.getenv('OPENAI_ORG_KEY'), 
+                        help='Your organization key.')
+    parser.add_argument('--log', default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+                        help='Set the logging level')
 
+    args = parser.parse_args()
+
+    log_level = getattr(logging, args.log.upper())
+    setup_logging(log_level)
+
+    logging.debug(args.prompt)
+    logging.debug(args.org_key)
+    logging.debug(args.api_key)
+
+    writer = ShortStoryWriter(org_key=args.org_key, api_key=args.api_key)
+    story = writer.author(args.prompt)
     print(story)
 
+    return
 
+    # old vv
+    org_key = 'org-SVcbPvQFyGx47d4LxAQpHQGP'
+    test_prompt = "a story about a dog who fights jesus"
 
 
 if __name__ == '__main__':

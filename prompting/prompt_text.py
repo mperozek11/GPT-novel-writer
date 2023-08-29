@@ -31,6 +31,3 @@ WRITE_CHAPTER = PromptTemplate.from_template("""The following is an outline for 
                                             Here are some details about the main characters to keep in mind: {character_context}
                                             Write the entirety of chapter {chapter_num} in great detail as if this were the final copy of the novella. 
                                             Try to add small details about the scene and use rich, descriptive language.""".strip())
-
-
-
