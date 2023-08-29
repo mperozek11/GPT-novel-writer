@@ -14,12 +14,14 @@ def main():
     parser = argparse.ArgumentParser(description='Generate short stories based on a prompt.')
     
     # Add command line arguments
-    parser.add_argument('--prompt', default='a story about a dog who fights jesus', 
+    parser.add_argument('--prompt', default='A story about a poodle who fights Jesus in the annual charity boxing match.', 
                         help='The prompt to base the story on.')
     parser.add_argument('--api_key', default=os.getenv('OPENAI_API_KEY'), 
                         help='Your OpenAI API Key.')
     parser.add_argument('--org_key', default=os.getenv('OPENAI_ORG_KEY'), 
                         help='Your organization key.')
+    parser.add_argument('--output_dir', default=None, 
+                        help='path to output directory for finished story.')
     parser.add_argument('--log', default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         help='Set the logging level')
 
@@ -33,7 +35,7 @@ def main():
     logging.debug(args.api_key)
 
     writer = ShortStoryWriter(org_key=args.org_key, api_key=args.api_key)
-    story = writer.author(args.prompt)
+    story = writer.author(args.prompt, args.output_dir)
     print(story)
 
     return

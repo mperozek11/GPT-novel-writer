@@ -20,7 +20,7 @@ class ShortStoryWriter:
         openai.organization = org_key
         openai.api_key = api_key
 
-    def author(self, prompt, n_chapters=5):
+    def author(self, prompt, output_dir, n_chapters=5):
         """
         Returns an entire short novel based on a short input prompt
         """
@@ -41,6 +41,10 @@ class ShortStoryWriter:
         elapsed = time.time() - start
         compute_time = time.strftime('%H:%M:%S', time.gmtime(elapsed))
         print(f"wall time to compute: {compute_time}")
+
+        if output_dir:
+            with open(output_dir + 'story.txt', 'w') as file:
+                file.write(story)
         return story
 
     def plot_summary(self, concept, iterations=3):
