@@ -1,4 +1,4 @@
-# GPT-reflect-writer
+# GPT-novel-writer
 
 An experiment in LLM prompt engineering and self-reflection built specifically for novel writing. 
 
