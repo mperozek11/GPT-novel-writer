@@ -4,8 +4,6 @@ An experiment in LLM prompt engineering and self-reflection built specifically f
 
 Self-reflection loosely inspired by [this paper](https://arxiv.org/pdf/2303.11366.pdf).
 
-Sample [output](https://docs.google.com/document/d/16tqxmEJUgzJyagtkLa9o3NO3hbdJ60Q-sJQpIlUuORI/edit?usp=sharing) from the following prompt: "A story about a poodle who fights Jesus in the annual charity boxing match"
-
 ### Instructions
 Run: 
 
@@ -16,6 +14,7 @@ If you prefer, you can export your API key and org key as environment variables 
 
 ### TODO
 - Add requirements.txt 
+- Refactor w LLMchain
 - Genre/ 'in the style of author' support: Allows for arbitrary genre input, generates genre/ style context for writing and plot.
 - Add a prompt debugger that outputs a file tracing each prompting step with input and output
 

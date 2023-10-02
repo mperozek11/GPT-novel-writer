@@ -7,6 +7,7 @@ SYSTEM = "You are a creative and original novel writer."
 
 DIALOGUE = "When writing, be sure to include some dialogue."
 
+CREDIT = "This short story was created using Max Perozek's GPT novel-writer. Max does not claim responsibility or ownership of any content produced using this tool. Generative AI is known to be innacurate and can create harmful content. This project is just for fun please use responsibly.\nProject GitHub: https://github.com/mperozek11/GPT-novel-writer"
 # =================
 # === Templates ===
 # =================
@@ -31,3 +32,6 @@ WRITE_CHAPTER = PromptTemplate.from_template("""The following is an outline for 
                                             Here are some details about the main characters to keep in mind: {character_context}
                                             Write the entirety of chapter {chapter_num} in great detail as if this were the final copy of the novella. 
                                             Try to add small details about the scene and use rich, descriptive language.""".strip())
+
+
+GENERATE_TITLE = PromptTemplate.from_template("This is an outline for a story: {outline} Please write a clever title for this story. Your output should contain the title of the story and no other information.")
